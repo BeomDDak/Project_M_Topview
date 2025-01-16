@@ -42,6 +42,7 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] private bool generateVamsur = true;
     [SerializeField][Range(0f, 1f)] private float vamsurSpawnChance = 0.2f;  // 뱀서방 등장 확률
 
+    #region Room
     private class Room
     {
         public Vector2 position;
@@ -58,7 +59,9 @@ public class DungeonGenerator : MonoBehaviour
             this.type = type;
         }
     }
+    #endregion
 
+    #region Door
     private class Door
     {
         public Room room1;
@@ -73,10 +76,11 @@ public class DungeonGenerator : MonoBehaviour
             direction = dir;
         }
     }
+    #endregion
 
-    private List<Room> rooms = new List<Room>();
-    private HashSet<Vector2> occupiedPositions = new HashSet<Vector2>();
-    private List<Door> allDoors = new List<Door>();
+    private List<Room> rooms = new List<Room>();        // 생성된 방들을 담고 있는 리스트
+    private HashSet<Vector2> occupiedPositions = new HashSet<Vector2>();    // 방이 생성될 때 중복확인하는 해시셋
+    private List<Door> allDoors = new List<Door>();     // 생성된 문들을 담고 있는 리스트
 
     void Start()
     {
@@ -84,14 +88,15 @@ public class DungeonGenerator : MonoBehaviour
         SpawnPlayer();      // 플레이어 생성
     }
 
+    // 던전 생성 메인 메서드
     void GenerateDungeon()
     {
         // 모서리 좌표 4개 설정
         Vector2[] corners = new Vector2[]
         {
-            new Vector2(0, 0),                          // 좌하단
-            new Vector2(0, layoutSize - 1),             // 좌상단
-            new Vector2(layoutSize - 1, 0),             // 우하단
+            new Vector2(0, 0),                           // 좌하단
+            new Vector2(0, layoutSize - 1),              // 좌상단
+            new Vector2(layoutSize - 1, 0),              // 우하단
             new Vector2(layoutSize - 1, layoutSize - 1)  // 우상단
         };
 
@@ -100,16 +105,18 @@ public class DungeonGenerator : MonoBehaviour
         CreateRoom(startPos, new Vector2Int(1, 1), RoomType.Start);
 
         // NxN 격자로 방 배치
+        // x,y 는 레이아웃 배치 시 지정되는 값
         for (int x = 0; x < layoutSize; x++)
         {
             for (int y = 0; y < layoutSize; y++)
             {
                 // 시작방 위치는 건너뛰기
-                if (x == startPos.x && y == startPos.y) continue;
+                if (x == startPos.x && y == startPos.y)
+                    continue;
 
                 Vector2 position = new Vector2(x, y);
 
-                // 보스방은 시작방의 반대편 모서리에 배치
+                // 보스방은 시작방의 대각선으로 반대편 모서리에 배치
                 if (generateBossRoom && IsDiagonalCorner(position, startPos, layoutSize))
                 {
                     CreateRoom(position, new Vector2Int(1, 1), RoomType.Boss);
@@ -117,8 +124,7 @@ public class DungeonGenerator : MonoBehaviour
                 else
                 {
                     // 일반방과 뱀서방을 랜덤하게 생성
-                    RoomType roomType = (generateVamsur && Random.value < vamsurSpawnChance) ?
-                        RoomType.Vamsur : RoomType.Normal;
+                    RoomType roomType = (generateVamsur && Random.value < vamsurSpawnChance) ? RoomType.Vamsur : RoomType.Normal;
                     CreateRoom(position, new Vector2Int(1, 1), roomType);
                 }
             }
@@ -129,6 +135,7 @@ public class DungeonGenerator : MonoBehaviour
         CreateDoorObjects();
     }
 
+    // 크루스칼 알고리즘 ( 모든 방에 도달할 수 있도록 함 )
     void GenerateMinimumConnections()
     {
         Dictionary<Room, HashSet<Room>> sets = new Dictionary<Room, HashSet<Room>>();
@@ -173,6 +180,7 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
+    // 추가적인 연결 생성 ( 보스방과 시작방은 연결 1개 나머지 방은 2개까지 연결 가능하도록 만들려고는 함 )
     void GenerateAdditionalConnections()
     {
         foreach (Room room in rooms)
@@ -214,6 +222,7 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
+    // 방향 계산
     Vector2 NormalizeDirection(Vector2 direction)
     {
         return Mathf.Abs(direction.x) > Mathf.Abs(direction.y)
@@ -221,6 +230,7 @@ public class DungeonGenerator : MonoBehaviour
             : new Vector2(0, Mathf.Sign(direction.y));
     }
 
+    // 방들의 연결
     void CreateConnection(Room room1, Room room2, Vector2 direction)
     {
         room1.connections[direction] = room2;
@@ -232,6 +242,7 @@ public class DungeonGenerator : MonoBehaviour
         allDoors.Add(newDoor);
     }
 
+    // 방과 방 사이에 문 오브젝트 생성
     void CreateDoorObjects()
     {
         foreach (Door door in allDoors)
@@ -243,6 +254,7 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
+    // 문 위치 계산
     Vector3 CalculateDoorPosition(Door door)
     {
         Vector3 room1Pos = new Vector3(door.room1.position.x * roomSpacing, 0,
@@ -252,6 +264,7 @@ public class DungeonGenerator : MonoBehaviour
         return Vector3.Lerp(room1Pos, room2Pos, 0.5f);
     }
 
+    // 문 회전 계산
     float CalculateDoorRotation(Vector2 direction)
     {
         if (direction == Vector2.right) return 90;
@@ -260,6 +273,7 @@ public class DungeonGenerator : MonoBehaviour
         return 180;
     }
 
+    // 방 생성
     void CreateRoom(Vector2 position, Vector2Int size, RoomType type)
     {
         Room newRoom = new Room(position, size, type);
@@ -278,16 +292,19 @@ public class DungeonGenerator : MonoBehaviour
         occupiedPositions.Add(position);
     }
 
+    // 대각선 인지 확인
     bool IsDiagonalCorner(Vector2 pos, Vector2 startPos, int size)
     {
         return IsCorner(pos, size) && pos.x != startPos.x && pos.y != startPos.y;
     }
 
+    // 모서리 인지 확인
     bool IsCorner(Vector2 pos, int size)
     {
         return (pos.x == 0 || pos.x == size - 1) && (pos.y == 0 || pos.y == size - 1);
     }
 
+    // 플레이어 생성 및 카메라 타겟 설정
     void SpawnPlayer()
     {
         // 시작방 찾기

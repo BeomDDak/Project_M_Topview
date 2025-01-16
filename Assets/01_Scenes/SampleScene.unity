@@ -476,7 +476,9 @@ MonoBehaviour:
     doorPrefab: {fileID: 2080593346664455575, guid: 995b8b139dcd9fe4c8a8298663a5ca05, type: 3}
   playerPrefab: {fileID: 6437530161126164551, guid: 3f7ce61e90ffa3a4c9d139816622e8b0, type: 3}
   virtualCamera: {fileID: 1323324566}
-  layoutSize: 4
+  playerSpawnY: 1
+  doorSpawnY: 1.5
+  layoutSize: 3
   roomSpacing: 20
   generateBossRoom: 1
   generateVamsur: 1
