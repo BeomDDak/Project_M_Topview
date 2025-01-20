@@ -324,6 +324,7 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
+  - component: {fileID: 963194230}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -439,6 +440,20 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &963194230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151193baac51ba249a5a72346e440f72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FOVMaterial: {fileID: 2100000, guid: d2889d95547d6f149a4e821ab9bc7d4a, type: 2}
+  playerFOV: {fileID: 0}
 --- !u!1 &1237389510
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,7 +484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomPrefabs:
-    normalRoom: {fileID: 9176829056643868208, guid: f413a1689d75cd4478e184b7d32e8cd5, type: 3}
+    normalRoom: {fileID: 4545014473749888039, guid: f413a1689d75cd4478e184b7d32e8cd5, type: 3}
     startRoom: {fileID: 1266406085798028947, guid: 171a642a5ef4dc3498da64aa41beefba, type: 3}
     bossRoom: {fileID: 2646477471560984099, guid: 2458cbeee6d6674418549a9723029377, type: 3}
     vamsurRoom: {fileID: 2269733647842091358, guid: 45e74673a2f0ded4393d66ee587ba60f, type: 3}
