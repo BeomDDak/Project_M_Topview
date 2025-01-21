@@ -322,9 +322,6 @@ public class DungeonGenerator : MonoBehaviour
                 virtualCamera.Follow = player.transform;
                 virtualCamera.LookAt = player.transform;
             }
-
-            // 플레이어 생성 이벤트 발생
-            GameEvents.InvokeOnPlayerSpawned(player);
         }
     }
 }
