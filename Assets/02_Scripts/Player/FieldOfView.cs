@@ -10,23 +10,36 @@ public class FieldOfView : MonoBehaviour
 	[Range(0, 360)]
 	public float viewAngle;
 
+    [Header("공격 범위 설정")]
+    [Range(0, 30)]
+    public float attackRadius;       // 범위
+    [Range(0, 360)]
+    public float attackAngle;        // 각도
+
     [Header("레이어 설정")]
     public LayerMask targetMask;
 	public LayerMask obstacleMask;
 
-	// 타겟들이 담길 리스트
-	[HideInInspector]
+    [Header("공격범위 색 변경")]
+    public Material attackRangeMaterial;
+    public Color normalColor = new Color(0, 1, 0, 0.3f);
+    public Color targetColor = new Color(1, 0, 0, 0.3f);
+
+    // 타겟들이 담길 리스트
+    [HideInInspector]
 	public List<Transform> visibleTargets = new List<Transform>();
-    
+    [HideInInspector]
+    public List<Transform> attackableTargets = new List<Transform>();
+
     public float meshResolution;
 	public int edgeResolveIterations;
 	public float edgeDstThreshold;
 
-	// public float maskCutawayDst = .1f;
-
     [Header("메시 필터")]
     public MeshFilter viewMeshFilter;
+    public MeshFilter attackRangeMeshFilter;
     Mesh viewMesh;
+    Mesh attackMesh;
 
     void Start()
 	{
@@ -35,8 +48,15 @@ public class FieldOfView : MonoBehaviour
 		viewMesh.name = "View Mesh";
 		viewMeshFilter.mesh = viewMesh;
 
+        // 공격범위 메시 초기화
+        attackMesh = new Mesh();
+        attackMesh.name = "Attack Mesh";
+        attackRangeMeshFilter.mesh = attackMesh;
+
         StartCoroutine("FindTargetsWithDelay", 0.2f);
-	}
+        UpdateRangeColor();
+
+    }
 
     IEnumerator FindTargetsWithDelay(float delay)
     {
@@ -49,12 +69,13 @@ public class FieldOfView : MonoBehaviour
 
     void LateUpdate()
     {
-        DrawFieldOfView(viewMesh, viewRadius, 360f);
+        DrawFieldOfView(viewMesh, viewRadius, viewAngle);
+        DrawFieldOfView(attackMesh, attackRadius, attackAngle);
     }
 
     void FindTargets()
     {
-        // 시야 내 타겟 찾기 (360도)
+        // 시야 내 타겟 찾기
         visibleTargets.Clear();
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
         foreach (Collider col in targetsInViewRadius)
@@ -66,6 +87,27 @@ public class FieldOfView : MonoBehaviour
                 visibleTargets.Add(target);
             }
         }
+
+        // 공격 범위 내 타겟 찾기
+        attackableTargets.Clear();
+        Collider[] targetsInRadius = Physics.OverlapSphere(transform.position, attackRadius, targetMask);
+
+        for (int i = 0; i < targetsInRadius.Length; i++)
+        {
+            Transform target = targetsInRadius[i].transform;
+            Vector3 dirToTarget = (target.position - transform.position).normalized;
+
+            if (Vector3.Angle(transform.forward, dirToTarget) < attackAngle / 2)
+            {
+                float distToTarget = Vector3.Distance(transform.position, target.position);
+                if (!Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
+                {
+                    attackableTargets.Add(target);
+                }
+            }
+        }
+
+        UpdateRangeColor(); // 현재 업데이트에서 체크 이벤트로 바꾸면 좋을듯
     }
 
     void DrawFieldOfView(Mesh mesh, float radius, float angle)
@@ -141,6 +183,14 @@ public class FieldOfView : MonoBehaviour
             point = _point;
             dst = _dst;
             angle = _angle;
+        }
+    }
+
+    void UpdateRangeColor()
+    {
+        if (attackRangeMaterial != null)
+        {
+            attackRangeMaterial.SetColor("_Color", attackableTargets.Count > 0 ? targetColor : normalColor);
         }
     }
 }

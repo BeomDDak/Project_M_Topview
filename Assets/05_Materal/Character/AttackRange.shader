@@ -1,20 +1,26 @@
-Shader "Custom/AttackRangeStencil" {
-    Properties {
+Shader "Custom/AttackRangeStencil" 
+{
+    Properties 
+    {
         _Color ("Overlay Color", Color) = (0,1,0,0.3)
         _MainTex ("Base Texture", 2D) = "white" {}
     }
-    SubShader {
-        Tags { 
+    SubShader 
+    {
+        Tags 
+        { 
             "Queue"="Transparent+200"
             "RenderType"="Transparent" 
         }
         
-        Stencil {
+        Stencil 
+        {
             Ref 1
             Comp Equal
         }
         
-        Pass {
+        Pass 
+        {
             ZWrite Off
             ZTest Always
             Blend SrcAlpha OneMinusSrcAlpha
@@ -48,6 +54,7 @@ Shader "Custom/AttackRangeStencil" {
                 fixed4 col = tex2D(_MainTex, i.uv);
                 return lerp(col, _Color, _Color.a);
             }
+
             ENDCG
         }
     }

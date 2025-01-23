@@ -25,9 +25,15 @@ public class AttackRange : MonoBehaviour
 
     [Header("메시 필터")]
     public MeshFilter attackRangeMeshFilter;
+    Mesh attackRangeMesh;
 
     void Start()
     {
+        // 공격범위 메시 초기화
+        attackRangeMesh = new Mesh();
+        attackRangeMesh.name = "AttackRange Mesh";
+        attackRangeMeshFilter.mesh = attackRangeMesh;
+
         StartCoroutine(FindTargetsWithDelay(0.2f));
         UpdateRangeColor();
     }

@@ -131,7 +131,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3018284140864627128}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.099999994}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -202,7 +202,6 @@ GameObject:
   - component: {fileID: 7649403219001029138}
   - component: {fileID: 3009038309205996373}
   - component: {fileID: 2443340013864755945}
-  - component: {fileID: -8534781116185940976}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -325,32 +324,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e841201df9707340ab35800c8ef21ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 3
+  viewRadius: 10
   viewAngle: 360
-  targetMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 1024
-  visibleTargets: []
-  meshResolution: 3
-  edgeResolveIterations: 4
-  edgeDstThreshold: 0.5
-  viewMeshFilter: {fileID: 6241707871068746671}
---- !u!114 &-8534781116185940976
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6437530161126164551}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe0fba082c494694f95c6cde65bd5147, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackRadius: 5
+  attackRadius: 5.7
   attackAngle: 47
   targetMask:
     serializedVersion: 2
@@ -359,9 +335,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   attackRangeMaterial: {fileID: 2100000, guid: 7556bbc8d1982b3408e2d78e376652ed, type: 2}
-  normalColor: {r: 0, g: 1, b: 0, a: 0.5803922}
+  normalColor: {r: 0, g: 1, b: 0, a: 0.3}
   targetColor: {r: 1, g: 0, b: 0, a: 0.3}
+  visibleTargets: []
   attackableTargets: []
+  meshResolution: 3
+  edgeResolveIterations: 4
+  edgeDstThreshold: 0.5
+  viewMeshFilter: {fileID: 6241707871068746671}
   attackRangeMeshFilter: {fileID: 3959793876404524875}
 --- !u!1 &8496195192593687091
 GameObject:
@@ -389,7 +370,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8496195192593687091}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.099999994}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
